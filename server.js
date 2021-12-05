@@ -35,7 +35,18 @@ con.connect((res, err) => {
 app.get("/test", (req, res) => {
   con.query("SELECT * FROM user", function (err, result, fields) {
     if (err) throw err;
-    console.log(result);
+    
+    var jsonArray = []
+    result.forEach(element => {
+        jsonArray.push({
+            user_id: element.user_id,
+            username: element.username,
+            password: element.password,
+            type: element.type
+        })
+    });
+
+    res.json(JSON.stringify(jsonArray))
   });
 });
 
