@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParse = require("body-parser");
 const app = express();
+const mysql = require("mysql")
 
 require("dotenv").config();
 const port = process.env.PORT || 5000;
