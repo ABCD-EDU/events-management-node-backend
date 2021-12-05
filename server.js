@@ -18,6 +18,19 @@ app.get('/', (req,res) => {
     })
 })
 
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "abcd",
+    password: "!abcd123"
+});
+
+con.connect((res,err) => {
+    if (err) {
+        throw err;
+    }
+    console.log("CONNECTED TO ABCD")
+})
+
 app.listen(port, () => {
     console.log(`CURRENTLY LISTENING AT PORT:${port}`)
 })

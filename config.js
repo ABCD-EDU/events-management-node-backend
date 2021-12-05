@@ -6,7 +6,6 @@ const config = {
         user: env.DB_USER || "abcd",
         password: env.DB_PASSWORD || "abcd12345",
         database: env.DB_NAME || "abcd",
-        table: env.DB_TABLE || "members",
     }
 }
 
