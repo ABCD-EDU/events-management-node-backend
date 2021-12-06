@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParse = require("body-parser");
 const app = express();
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 require("dotenv").config();
 const port = process.env.PORT || 5000;
@@ -19,40 +19,31 @@ app.get("/", (req, res) => {
   });
 });
 
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "abcd",
-  password: "!abcd123",
-});
-
-con.connect((res, err) => {
-  if (err) {
-    throw err;
-  }
-  console.log("CONNECTED TO ABCD");
-});
+const connection = mysql.createConnection({
+	host: "localhost",
+	user: "abcd",
+	password: "!abcd123",
+	database: "abcd"
+})
 
 app.get("/test", (req, res) => {
-  con.query("SELECT * FROM user", function (err, result, fields) {
-    if (err) throw err;
-    
-    var jsonArray = []
-    result.forEach(element => {
-        jsonArray.push({
-            user_id: element.user_id,
-            username: element.username,
-            password: element.password,
-            type: element.type
-        })
-    });
+	connection.query(
+		'SELECT * FROM user',
+		function(err, results, fields) {
+			res.json(results)
+		}
+	)
+})
 
-    res.json(JSON.stringify(jsonArray))
-  });
-});
+app.get("/:id", (req, res) => {
+	const {id} = req.params;
+	connection.query(
+		`SELECT * FROM user WHERE user_id=${id}`,
+		function(err, results, fields) {
+			res.json(results)
+		})
+})
 
 app.listen(port, () => {
   console.log(`CURRENTLY LISTENING AT PORT:${port}`);
-});
-app.listen(80, () => {
-  console.log(`CURRENTLY LISTENING AT PORT:80`);
 });
