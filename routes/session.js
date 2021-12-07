@@ -11,25 +11,22 @@ router.post("/login", (req, res) => {
 
   var queriedData;
   db.query("SELECT * FROM user WHERE `username`=? AND `password`=?", [username, password]).then((results) => {
-      queriedData = results;
-  })
-
-  if (queriedData) {
-    if (
-        req.body.username == queriedUser &&
-        req.body.password == queriedPassword
+	const test = results[0]; 
+	  console.log(test)
+	console.log(req.body)
+	  if (
+        req.body.username === test.username &&
+        req.body.password === test.password 
       ) {
         session = req.session;
         session.userid = username;
         res.send(
-          `Hey there, welcome ${session.userid} <a href=\'/logout'>click to logout</a>`
+          `Hey there, welcome ${session.userid} <a href=\'/session/logout'>click to logout</a>`
         );
       } else {
         res.send("Invalid username or password");
       }
-  } else {
-      res.send(`User ${username} does not exist.`)
-  }
+  })
 });
 
 router.get("/logout", (req, res) => {
