@@ -2,11 +2,11 @@ const router = require("express").Router;
 const bodyParse = require("body-parser");
 const app = express();
 const mysql = require("mysql2");
-import { query } from "../services/db.js";
+const db = require("../services/db.js")
 
 router.get("/:id", (req, res) => {
     const { id } = res.params;
-    const results = await query("SELECT * FROM `user` WHERE `user_id`=?", [id] );
+    const results = db.query("SELECT * FROM `user` WHERE `user_id`=?", [id] );
     console.log(results);
     
     // res.json({
