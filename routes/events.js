@@ -1,4 +1,4 @@
-const router = require("express").Router;
+const router = require("express").Router();
 const db = require("../services/db.js")
 
 router.get("/:id", (req, res) => {
