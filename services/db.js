@@ -8,6 +8,4 @@ async function query(sql, params) {
     return results;
 }
 
-module.exports = {
-    query
-}
+module.exports = { query }
