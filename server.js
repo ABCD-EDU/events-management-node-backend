@@ -14,7 +14,6 @@ app.use(
 );
 
 app.use("/events", require("./routes/events.js"));
-app.use("/admin", require("./routes/admin.js"));
 app.use("/member", require("./routes/member.js"));
 
 app.get("/", (req, res) => {
