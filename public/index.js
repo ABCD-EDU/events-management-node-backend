@@ -1,15 +1,15 @@
 const subNav = document.getElementById("eventContainer");
 
-async function fetchAsync (url) {
-    let response = await fetch(url);
-    console.log(response)
-    let data = await response[0].json();
-    return data;
-  }
+async function fetchAsync(url) {
+  let response = await fetch(url, {
+      method: "GET"
+  });
+  let data = await response.json();
+  return data;
+}
 
 const generateEvents = () => {
-  const url = new URL("localhost:5000/events/all");
-  const data = fetchAsync(url);
+  const data = fetchAsync("events/1");
   const { eventName, address, date, time, description, status } = data;
 
   subNav.innerHTML += `
