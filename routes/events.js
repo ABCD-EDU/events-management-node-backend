@@ -9,9 +9,30 @@ router.get("/:id", (req, res) => {
     });
 })
 
+/**
+ *  event_id|name|address|date|time|description|status|category|
+ */
 router.get("/all", (req, res) => {
-    db.query("SELECT * FROM `event`", []).then((results) => {
-        res.json(results);
+    db.query("SELECT * FROM `event`", [])
+    .then((results) => {
+        res.json({
+            eventName: results.json,
+            address: results.address,
+            date: results.date,
+            time: results.time,
+            description: results.description,
+            status: results.status
+        });
+    })
+    .catch((err) => {
+        res.json({
+            eventName: "results.json",
+            address: "results.address",
+            date: "results.date",
+            time: "results.time",
+            description: "results.description",
+            status: "results.status"
+        });
     })
 })
 

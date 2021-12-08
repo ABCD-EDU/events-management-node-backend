@@ -8,22 +8,6 @@ router.get("/:id", (req, res) => {
     });
 })
 
-router.post("/login", (req, res) => {
-    const { user, password } = req.params;
-    
-    db.query("SELECT * FROM `user` WHERE `username`=? AND `password`=?", [user, password]).then((results) => {
-        if (results) {
-            res.json({
-                status: true,
-            })
-        } else {
-            res.json({
-                status: false,
-            })
-        }
-    });
-})
-
 /**
  * This function returns the list of events that the member has participated in
  */

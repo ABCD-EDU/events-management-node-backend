@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style/css/dashboard.css">
     <link rel="stylesheet" href="/style/css/nav.css">
+    <link rel="stylesheet" href="/style/css/eventCard.css">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <title>Page Title</title>
 </head>
 
 <body>
     <header>
-        <img id="burger-icon" src="./res/img/burger-img.png" alt="hamburger icon" />
+        <img id="burger-icon" src="/res/img/burger-img.png" alt="hamburger icon" />
         <nav id="main-nav">
             <ul id="event-links">
                 <li class="main-nav-item nav-item-1"><a href="">My Events</a></li>
@@ -21,7 +22,7 @@
             </ul>
             <ul id="account-links">
                 <li class="main-nav-item nav-item-3"><a href="">Create an Event</a></li>
-                <li class="main-nav-item nav-item-4"><a href="/session/login">Login</a></li>
+                <li class="main-nav-item nav-item-4"><a href="">Logout</a></li>
             </ul>
         </nav>
 
@@ -55,9 +56,10 @@
             </ul> -->
         </nav>
         <hr id="divider">
-
+        
+        <div id="eventContainer"></div>
     </section>
-    <script src="/public/"></script>
+    <script src="index.js"></script>
 </body>
 
 </html>

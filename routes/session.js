@@ -8,7 +8,12 @@ app.use(express.static("../public"))
 
 router.post("/attempt", (req, res) => {
   const { username, password } = req.body;
-  console.log(req.body)
+  if (!username || !password) {
+    res.send({
+      message: "Invalid input. Please try again."
+    })
+  }
+
   db.query("SELECT * FROM user WHERE `username`=? AND `password`=?", [
     username,
     password,
@@ -20,9 +25,7 @@ router.post("/attempt", (req, res) => {
     ) {
       session = req.session;
       session.userid = username;
-      res.send(
-        `Hey there, welcome ${session.userid} <a href=\'/session/logout'>click to logout</a>`
-      );
+      res.redirect("/");
     } else {
       res.send("Invalid username or password");
     }
