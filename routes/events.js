@@ -2,7 +2,7 @@ const router = require("express").Router();
 const { json } = require("body-parser");
 const db = require("../services/db.js")
 
-router.get("/:id", (req, res) => {
+router.get("/id/:id", (req, res) => {
     const { id } = req.params;
     db.query("SELECT * FROM `event` WHERE `event_id`=?", [id])
     .then((results) => {
@@ -26,26 +26,14 @@ router.get("/:id", (req, res) => {
 /**
  *  event_id|name|address|date|time|description|status|category|
  */
-router.get("/all", (req, res) => {
+router.get("/category/all", (req, res) => {
     db.query("SELECT * FROM `event`", [])
     .then((results) => {
-        res.json({
-            eventName: results.json,
-            address: results.address,
-            date: results.date,
-            time: results.time,
-            description: results.description,
-            status: results.status
-        });
+        res.json(results);
     })
     .catch((err) => {
         res.json({
-            eventName: "results.json",
-            address: "results.address",
-            date: "results.date",
-            time: "results.time",
-            description: "results.description",
-            status: "results.status"
+            message: err
         });
     })
 })

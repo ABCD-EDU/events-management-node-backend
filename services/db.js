@@ -8,4 +8,11 @@ async function query(sql, params) {
     return results;
 }
 
-module.exports = { query }
+async function simpleQuery(sql) {
+    const connection = await mysql.createConnection(config.db);
+    const [results,] = await connection.query(sql);
+    console.log(results)
+    return results;
+}
+
+module.exports = { query, simpleQuery }
