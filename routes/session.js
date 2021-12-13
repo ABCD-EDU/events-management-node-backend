@@ -3,11 +3,12 @@ const { json } = require("body-parser");
 const db = require("../services/db.js");
 var path = require("path")
 const express = require("express");
+var session = require("express-session");
 const app = express();
 app.use(express.static("../public"))
 
 router.post("/attempt", (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, type } = req.body;
   if (!username || !password) {
     res.send({
       message: "Invalid input. Please try again."
@@ -25,6 +26,7 @@ router.post("/attempt", (req, res) => {
     ) {
       session = req.session;
       session.userid = username;
+      session.type = type
       res.redirect("/");
     } else {
       res.send("Invalid username or password");
@@ -33,15 +35,26 @@ router.post("/attempt", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  req.session.destroy();
-  res.redirect("/");
+  if (req.session.userid) {
+    req.session.destroy();
+    res.json({message:true})
+  }
+  res.json({message:false})
 });
 
 router.get("/login", (req, res) => {
   if (req.session.userid) {
     res.redirect("/");
   } else {
-    res.sendFile(path.resolve("public/login.html"))
+    res.sendFile(path.resolve("public/views/login.html"))
+  }
+});
+
+router.get("/isLogged", (req, res) => {
+  if(req.session.userid) {
+    res.json({message: true});
+  } else {
+    res.json({message: false})
   }
 });
 

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/style/css/eventCard.css">
     <script src="/public/dashboard.js"></script>
     <script src="../scripts/dashboard.js" defer></script>
+    <script src="/index.js" defer></script>
     <title>Page Title</title>
 </head>
 <body>
@@ -20,10 +21,10 @@
                 <span class="bar"></span>
             </div>
             <ul id="main-nav-links">
-                <li class="main-nav-item"><a href="/events/user/1">My Events</a></li>
-                <li class="main-nav-item"><a href="/events/upcoming">Upcoming Events</a></li>
-                <li class="main-nav-item"><a href="/events/edit">Create an Event</a></li>
-                <li class="main-nav-item"><a href="">Logout</a></li>
+                <li class="main-nav-item"><a id="my-events">My Events</a></li>
+                <li class="main-nav-item"><a id="upcoming-events">Upcoming Events</a></li>
+                <li class="main-nav-item"><a id="create-event">Create an Event</a></li>
+                <li class="main-nav-item"><a id="log">Login</a></li>
             </ul>
         </nav>
     </header>

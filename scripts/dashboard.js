@@ -12,9 +12,9 @@ const generateEvents = () => {
   fetchAsync("events/category/all").then((data) => {
     const _data = data;
     for (var i = 0; i < _data.length; i++) {
-      const { name, address, date, time, description, status, category } = _data[i];
-          console.log(data[i])
-        subNav.innerHTML += `
+      const { name, address, date, time, description, status, category } =
+        _data[i];
+      subNav.innerHTML += `
       <section id="card">
           <div id="info">
               <h2 id="event-name">${name}</h2>
