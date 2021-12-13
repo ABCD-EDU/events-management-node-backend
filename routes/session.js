@@ -19,14 +19,14 @@ router.post("/attempt", (req, res) => {
     username,
     password,
   ]).then((results) => {
-    const test = results[0];
+    const user = results[0];
     if (
-      req.body.username === test.username &&
-      req.body.password === test.password
+      req.body.username === user.username &&
+      req.body.password === user.password
     ) {
       session = req.session;
       session.userid = username;
-      session.type = type
+      session.type = user.type;
       res.redirect("/");
     } else {
       res.send("Invalid username or password");
