@@ -26,7 +26,6 @@ router.get("/id/:id", (req, res) => {
 
 router.get("/user-events", (req, res) => {
   const id  = req.session.user_id;
-  console.log(req.session.user_id)
   db.query(
     `
         SELECT *
@@ -39,6 +38,21 @@ router.get("/user-events", (req, res) => {
     res.json(data);
   });
 });
+
+router.get("/upcoming-events", (req, res) => {
+    db.query(
+    `
+        SELECT * FROM \`event\` WHERE date_start>NOW();
+    `,
+    []
+    ).then((data) => {
+        res.json(data);
+    })
+})
+
+router.get("/my-events", (req, res) => {
+    res.redirect("/");
+})
 
 /**
  *  event_id|name|address|date|time|description|status|category|
