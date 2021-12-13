@@ -8,7 +8,8 @@ const app = express();
 app.use(express.static("../public"))
 
 router.post("/attempt", (req, res) => {
-  const { username, password, type } = req.body;
+  const { username, password } = req.body;
+  // TODO: FIX THIS
   if (!username || !password) {
     res.send({
       message: "Invalid input. Please try again."
@@ -25,7 +26,8 @@ router.post("/attempt", (req, res) => {
       req.body.password === user.password
     ) {
       session = req.session;
-      session.userid = username;
+      session.user_name = username;
+      session.user_id = user.user_id;
       session.type = user.type;
       res.redirect("/");
     } else {
@@ -35,7 +37,7 @@ router.post("/attempt", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  if (req.session.userid) {
+  if (req.session.user_name) {
     req.session.destroy();
     res.json({message:true})
   }
@@ -43,7 +45,7 @@ router.get("/logout", (req, res) => {
 });
 
 router.get("/login", (req, res) => {
-  if (req.session.userid) {
+  if (req.session.user_name) {
     res.redirect("/");
   } else {
     res.sendFile(path.resolve("public/views/login.html"))
@@ -51,7 +53,7 @@ router.get("/login", (req, res) => {
 });
 
 router.get("/isLogged", (req, res) => {
-  if(req.session.userid) {
+  if(req.session.user_id) {
     res.json({message: true});
   } else {
     res.json({message: false})

@@ -28,8 +28,12 @@ app.use("/member", require("./routes/member.js"));
 app.use("/session", require("./routes/session.js"));
 
 app.get('/',(req,res) => {
-  res.sendFile(path.resolve("public/index.html"))
+  res.redirect("/upcoming-events");
 });
+
+app.get("/upcoming-events", (req, res) => {
+  res.sendFile(path.resolve("public/index.html"));
+})
 
 app.listen(port, () => {
   console.log(`CURRENTLY LISTENING AT PORT:${port}`);
