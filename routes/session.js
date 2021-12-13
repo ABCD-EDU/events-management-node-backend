@@ -58,4 +58,12 @@ router.get("/isLogged", (req, res) => {
   }
 });
 
+router.get("/userType", (req, res) => {
+  if(req.session.type) {
+    res.json({type: req.session.type});
+  } else {
+    res.json({message: "user not found"})
+  }
+})
+
 module.exports = router;
