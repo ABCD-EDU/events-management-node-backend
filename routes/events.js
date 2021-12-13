@@ -25,7 +25,7 @@ router.get("/id/:id", (req, res) => {
 });
 
 router.get("/user-events", (req, res) => {
-  const id  = req.session.user_id;
+  const id = req.session.user_id;
   db.query(
     `
         SELECT *
@@ -40,33 +40,58 @@ router.get("/user-events", (req, res) => {
 });
 
 router.get("/upcoming-events", (req, res) => {
-    db.query(
+  db.query(
     `
         SELECT * FROM \`event\` WHERE date_start>NOW();
     `,
     []
-    ).then((data) => {
-        res.json(data);
-    })
-})
+  ).then((data) => {
+    res.json(data);
+  });
+});
 
 router.get("/my-events", (req, res) => {
-    res.redirect("/");
-})
+  res.redirect("/");
+});
 
 /**
  *  event_id|name|address|date|time|description|status|category|
  */
-router.get("/category/all", (req, res) => {
-  db.query("SELECT * FROM `event`", [])
-    .then((results) => {
-      res.json(results);
-    })
-    .catch((err) => {
-      res.json({
-        message: err,
-      });
+router.get("/category/:category", (req, res) => {
+  const { category } = req.params;
+  if (req.session.user_id) {
+    db.query("SELECT * FROM event WHERE category=?", [category]).then(
+      (data) => {
+        res.json(data);
+      }
+    );
+  } else {
+    res.json({
+      message: "User is not logged in",
     });
+  }
 });
+
+router.post("/join", (req, res) => {
+  const { event_id } = req.body;
+
+  db.query("INSERT INTO event_members VALUES (?,?)", [
+    event_id,
+    req.session.user_id,
+  ])
+  .then(console.log)
+  .catch(console.log);
+});
+
+router.post("/leave", (req, res) => {
+    const { event_id } = req.body;
+  
+    db.query("DELETE FROM event_members WHERE event_id=? AND user_user_id=?", [
+      event_id,
+      req.session.user_id,
+    ])
+    .then(console.log)
+    .catch(console.log);
+  });
 
 module.exports = router;
