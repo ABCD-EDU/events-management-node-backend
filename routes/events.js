@@ -98,7 +98,6 @@ router.post("/leave", (req, res) => {
 
 router.get("/search", (req, res) => {
     const { search } = req.query
-    console.log(search);
     db.query(`SELECT * FROM event WHERE LOWER(event.event_name) like '%${search}%'`)
         .then((results) => {
             res.json(results);
