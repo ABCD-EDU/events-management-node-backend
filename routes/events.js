@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { json } = require("body-parser");
+const admin = require("../utility/admin.js");
 var session = require("express-session");
 const db = require("../services/db.js");
 
@@ -26,24 +27,29 @@ router.get("/id/:id", (req, res) => {
 
 router.get("/user-events", (req, res) => {
   const id = req.session.user_id;
-  db.query(
-    `
+  if (req.session.type === "member") {
+    db.query(
+      `
         SELECT *
         FROM event_members
         INNER JOIN \`event\` USING (event_id)
         where user_user_id=?
         `,
-    [id]
-  ).then((data) => {
-    res.json(data);
-  });
+      [id]
+    ).then((data) => {
+      res.json(data);
+    });
+  } else if (req.session.type === "admin") {
+    console.log("administrator request");
+    admin.initAdminEvents(id, res)
+  }
 });
 
 router.get("/upcoming-events", (req, res) => {
   db.query(
     `
-        SELECT * FROM \`event\` WHERE date_start>NOW();
-    `,
+          SELECT * FROM \`event\` WHERE date_start>NOW();
+      `,
     []
   ).then((data) => {
     res.json(data);
@@ -85,6 +91,13 @@ router.post("/join", (req, res) => {
       });
     })
     .catch(console.log);
+});
+
+router.post("/create", (req, res) => {
+  const user_id = req.session.user_id;
+  let data = req.body;
+  data["data"]["userID"] = user_id;
+  admin.createEvent(JSON.stringify(data), res);
 });
 
 router.post("/leave", (req, res) => {
