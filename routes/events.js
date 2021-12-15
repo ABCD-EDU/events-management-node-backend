@@ -52,24 +52,27 @@ router.get("/upcoming-events", (req, res) => {
       `,
     []
   ).then((data) => {
-    let results = data;
-    for (let i = 0; i < results.length; i++) {
-      db.query(
-        "SELECT * FROM event_members WHERE user_user_id=? AND event_id=?",
-        [req.session.user_id, results[i].event_id]
-      )
-      .then((event) => {
-        if (event.length > 0) {
-          results[i]["hasJoined"] = true;
-        } else {
-          results[i]["hasJoined"] = false;
-        }
-      })
-      .then(() => {
-        res.json(results);
-      });
+    if (req.session.user_id) {
+      let results = data;
+      for (let i = 0; i < results.length; i++) {
+        db.query(
+          "SELECT * FROM event_members WHERE user_user_id=? AND event_id=?",
+          [req.session.user_id, results[i].event_id]
+        )
+          .then((event) => {
+            if (event.length > 0) {
+              results[i]["hasJoined"] = true;
+            } else {
+              results[i]["hasJoined"] = false;
+            }
+          })
+          .then(() => {
+            res.json(results);
+          });
+      }
+    } else {
+      res.json(data);
     }
-    
   });
 });
 

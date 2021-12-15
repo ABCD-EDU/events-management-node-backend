@@ -1,9 +1,10 @@
 const request = require("request");
+require("dotenv").config();
 
 const adminGetEP = "http://localhost/CS312-final-project-admin-php/api/get";
 const adminPostEP = "http://localhost/CS312-final-project-admin-php/api/post";
 const headers = {
-    'x-api-key': 'hotdogs',
+    'x-api-key': process.env.API_KEY,
     // 'Accept': 'application/json',
     // 'Content-Type': 'application/json',
 };
