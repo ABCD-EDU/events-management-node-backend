@@ -150,4 +150,30 @@ router.get("/search", (req, res) => {
     });
 });
 
+router.get("/event_data", (req, res) => {
+  const id = req.session.eventToEdit;
+  console.log("GETTING EVENT DATA ID: " + id)
+  db.query(
+    `SELECT * FROM event WHERE event_id like '${id}%'`
+  )
+    .then((results) => {
+      console.log(results);
+      res.json(results);
+    })
+    .catch((err) => {
+      res.json({
+        message: err,
+      });
+    });
+});
+
+router.post("/set_event_id", (req, res) => {
+  const { id } = req.body;
+  console.log("SET EVENT ID: " + id)
+  req.session.eventToEdit = id;
+  res.json({
+    message: true
+  })
+});
+
 module.exports = router;
