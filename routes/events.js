@@ -113,13 +113,6 @@ router.post("/join", (req, res) => {
     .catch(console.log);
 });
 
-router.post("/create", (req, res) => {
-  const user_id = req.session.user_id;
-  let data = req.body;
-  data["data"]["userID"] = user_id;
-  admin.sendSimplePostReq(JSON.stringify(data), res);
-});
-
 router.post("/leave", (req, res) => {
   const { event_id } = req.body;
 
@@ -180,6 +173,29 @@ router.post("/edit", (req, res) => {
   const data = req.body;
   console.log("EDIT: " + JSON.stringify(data))
   // console.log(data)
+  admin.sendSimplePostReq(JSON.stringify(data), res);
+});
+
+router.post("/create", (req, res) => {
+  console.log("create event")
+  const user_id = req.session.user_id;
+  let data = req.body;
+  data["data"]["userID"] = user_id;
+  admin.sendSimplePostReq(JSON.stringify(data), res);
+});
+
+router.get("/discardEdit", (req, res) => {
+  console.log("discard edit")
+  req.session.eventToEdit = null;
+  // res.redirect("/");
+});
+
+router.get("/delete-event", (req, res) => {
+  console.log("delet event")
+  req.session.eventToEdit = null;
+  const user_id = req.session.user_id;
+  const data = req.body;
+  data["data"]["userID"] = user_id;
   admin.sendSimplePostReq(JSON.stringify(data), res);
 });
 
