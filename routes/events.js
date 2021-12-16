@@ -40,40 +40,44 @@ router.get("/user-events", (req, res) => {
       res.json(data);
     });
   } else if (req.session.type === "admin") {
-    console.log("administrator request");
-    admin.initAdminEvents(id, res);
+    admin.getAdminEvents(id, res);
   }
 });
 
 router.get("/upcoming-events", (req, res) => {
-  db.query(
-    `
+  const id = req.session.user_id;
+  if (req.session.type === "member" || req.session.type == null) {
+    db.query(
+      `
           SELECT * FROM \`event\` WHERE date_start>NOW();
       `,
-    []
-  ).then((data) => {
-    if (req.session.user_id) {
-      let results = data;
-      for (let i = 0; i < results.length; i++) {
-        db.query(
-          "SELECT * FROM event_members WHERE user_user_id=? AND event_id=?",
-          [req.session.user_id, results[i].event_id]
-        )
-          .then((event) => {
-            if (event.length > 0) {
-              results[i]["hasJoined"] = true;
-            } else {
-              results[i]["hasJoined"] = false;
-            }
-          })
-          .then(() => {
-            res.json(results);
-          });
+      []
+    ).then((data) => {
+      if (req.session.user_id) {
+        let results = data;
+        for (let i = 0; i < results.length; i++) {
+          db.query(
+            "SELECT * FROM event_members WHERE user_user_id=? AND event_id=?",
+            [req.session.user_id, results[i].event_id]
+          )
+            .then((event) => {
+              if (event.length > 0) {
+                results[i]["hasJoined"] = true;
+              } else {
+                results[i]["hasJoined"] = false;
+              }
+            })
+            .then(() => {
+              res.json(results);
+            });
+        }
+      } else {
+        res.json(data);
       }
-    } else {
-      res.json(data);
-    }
-  });
+    });
+  } else if (req.session.type === "admin") {
+    admin.getAdminEventsUpcoming(id, res);
+  }
 });
 
 router.get("/my-events", (req, res) => {

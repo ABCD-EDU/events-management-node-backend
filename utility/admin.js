@@ -9,8 +9,22 @@ const headers = {
     // 'Content-Type': 'application/json',
 };
 
-function initAdminEvents(id, res){
+function getAdminEvents(id, res){
     const url = adminGetEP + "?user_id= " + id + "&action=GET_EVENTS";
+    const options = {
+        uri: url,
+        method: "GET",
+        headers: headers
+    };
+    request(options, (error, response, body) => {
+        toReturn = body;
+        res.json(JSON.parse(body))
+        return;
+    })
+};
+
+function getAdminEventsUpcoming(id, res) {
+    const url = adminGetEP + "?user_id= " + id + "&action=GET_EVENTS_UPCOMING";
     const options = {
         uri: url,
         method: "GET",
@@ -37,4 +51,4 @@ function sendSimplePostReq(data, res) {
     })
 }
 
-module.exports = { initAdminEvents, sendSimplePostReq }
+module.exports = { getAdminEvents, sendSimplePostReq, getAdminEventsUpcoming }
