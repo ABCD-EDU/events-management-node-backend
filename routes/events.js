@@ -117,7 +117,7 @@ router.post("/create", (req, res) => {
   const user_id = req.session.user_id;
   let data = req.body;
   data["data"]["userID"] = user_id;
-  admin.createEvent(JSON.stringify(data), res);
+  admin.sendSimplePostReq(JSON.stringify(data), res);
 });
 
 router.post("/leave", (req, res) => {
@@ -174,6 +174,13 @@ router.post("/set_event_id", (req, res) => {
   res.json({
     message: true
   })
+});
+
+router.post("/edit", (req, res) => {
+  const data = req.body;
+  console.log("EDIT: " + JSON.stringify(data))
+  // console.log(data)
+  admin.sendSimplePostReq(JSON.stringify(data), res);
 });
 
 module.exports = router;

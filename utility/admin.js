@@ -23,7 +23,7 @@ function initAdminEvents(id, res){
     })
 };
 
-function createEvent(data, res) {
+function sendSimplePostReq(data, res) {
     const options = {
         uri: adminPostEP,
         method: "POST",
@@ -32,11 +32,9 @@ function createEvent(data, res) {
     };
     request(options, (error, response, body) => {
         toReturn = body;
-        res.json({
-            message: true
-        })
+        res.json(body)
         return;
     })
 }
 
-module.exports = { initAdminEvents, createEvent }
+module.exports = { initAdminEvents, sendSimplePostReq }
