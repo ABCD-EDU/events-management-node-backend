@@ -9,7 +9,7 @@ const headers = {
     // 'Content-Type': 'application/json',
 };
 
-function initAdminEvents(id, res){
+function getAdminEvents(id, res){
     const url = adminGetEP + "?user_id= " + id + "&action=GET_EVENTS";
     const options = {
         uri: url,
@@ -23,7 +23,21 @@ function initAdminEvents(id, res){
     })
 };
 
-function createEvent(data, res) {
+function getAdminEventsUpcoming(id, res) {
+    const url = adminGetEP + "?user_id= " + id + "&action=GET_EVENTS_UPCOMING";
+    const options = {
+        uri: url,
+        method: "GET",
+        headers: headers
+    };
+    request(options, (error, response, body) => {
+        toReturn = body;
+        res.json(JSON.parse(body))
+        return;
+    })
+};
+
+function sendSimplePostReq(data, res) {
     const options = {
         uri: adminPostEP,
         method: "POST",
@@ -32,11 +46,9 @@ function createEvent(data, res) {
     };
     request(options, (error, response, body) => {
         toReturn = body;
-        res.json({
-            message: true
-        })
+        res.json(body)
         return;
     })
 }
 
-module.exports = { initAdminEvents, createEvent }
+module.exports = { getAdminEvents, sendSimplePostReq, getAdminEventsUpcoming }

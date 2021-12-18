@@ -40,40 +40,44 @@ router.get("/user-events", (req, res) => {
       res.json(data);
     });
   } else if (req.session.type === "admin") {
-    console.log("administrator request");
-    admin.initAdminEvents(id, res);
+    admin.getAdminEvents(id, res);
   }
 });
 
 router.get("/upcoming-events", (req, res) => {
-  db.query(
-    `
+  const id = req.session.user_id;
+  if (req.session.type === "member" || req.session.type == null) {
+    db.query(
+      `
           SELECT * FROM \`event\` WHERE date_start>NOW();
       `,
-    []
-  ).then((data) => {
-    if (req.session.user_id) {
-      let results = data;
-      for (let i = 0; i < results.length; i++) {
-        db.query(
-          "SELECT * FROM event_members WHERE user_user_id=? AND event_id=?",
-          [req.session.user_id, results[i].event_id]
-        )
-          .then((event) => {
-            if (event.length > 0) {
-              results[i]["hasJoined"] = true;
-            } else {
-              results[i]["hasJoined"] = false;
-            }
-          })
-          .then(() => {
-            res.json(results);
-          });
+      []
+    ).then((data) => {
+      if (req.session.user_id) {
+        let results = data;
+        for (let i = 0; i < results.length; i++) {
+          db.query(
+            "SELECT * FROM event_members WHERE user_user_id=? AND event_id=?",
+            [req.session.user_id, results[i].event_id]
+          )
+            .then((event) => {
+              if (event.length > 0) {
+                results[i]["hasJoined"] = true;
+              } else {
+                results[i]["hasJoined"] = false;
+              }
+            })
+            .then(() => {
+              res.json(results);
+            });
+        }
+      } else {
+        res.json(data);
       }
-    } else {
-      res.json(data);
-    }
-  });
+    });
+  } else if (req.session.type === "admin") {
+    admin.getAdminEventsUpcoming(id, res);
+  }
 });
 
 router.get("/my-events", (req, res) => {
@@ -113,13 +117,6 @@ router.post("/join", (req, res) => {
     .catch(console.log);
 });
 
-router.post("/create", (req, res) => {
-  const user_id = req.session.user_id;
-  let data = req.body;
-  data["data"]["userID"] = user_id;
-  admin.createEvent(JSON.stringify(data), res);
-});
-
 router.post("/leave", (req, res) => {
   const { event_id } = req.body;
 
@@ -148,6 +145,62 @@ router.get("/search", (req, res) => {
         message: err,
       });
     });
+});
+
+router.get("/event_data", (req, res) => {
+  const id = req.session.eventToEdit;
+  console.log("GETTING EVENT DATA ID: " + id)
+  db.query(
+    `SELECT * FROM event WHERE event_id like '${id}%'`
+  )
+    .then((results) => {
+      console.log(results);
+      res.json(results);
+    })
+    .catch((err) => {
+      res.json({
+        message: err,
+      });
+    });
+});
+
+router.post("/set_event_id", (req, res) => {
+  const { id } = req.body;
+  console.log("SET EVENT ID: " + id)
+  req.session.eventToEdit = id;
+  res.json({
+    message: true
+  })
+});
+
+router.post("/edit", (req, res) => {
+  const data = req.body;
+  console.log("EDIT: " + JSON.stringify(data))
+  // console.log(data)
+  admin.sendSimplePostReq(JSON.stringify(data), res);
+});
+
+router.post("/create", (req, res) => {
+  console.log("create event")
+  const user_id = req.session.user_id;
+  let data = req.body;
+  data["data"]["userID"] = user_id;
+  admin.sendSimplePostReq(JSON.stringify(data), res);
+});
+
+router.get("/discardEdit", (req, res) => {
+  console.log("discard edit")
+  req.session.eventToEdit = null;
+  // res.redirect("/");
+});
+
+router.get("/delete-event", (req, res) => {
+  console.log("delet event")
+  req.session.eventToEdit = null;
+  const user_id = req.session.user_id;
+  const data = req.body;
+  data["data"]["userID"] = user_id;
+  admin.sendSimplePostReq(JSON.stringify(data), res);
 });
 
 module.exports = router;
