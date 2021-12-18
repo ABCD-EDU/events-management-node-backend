@@ -77,7 +77,7 @@ router.get("/upcoming-events", (req, res) => {
 });
 
 router.get("/my-events", (req, res) => {
-  res.redirect("/");
+  res.sendFile(path.resolve("public/index.html"));
 });
 
 /**
